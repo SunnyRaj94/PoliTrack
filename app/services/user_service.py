@@ -4,7 +4,7 @@ from fastapi import HTTPException, status
 from beanie import PydanticObjectId
 from datetime import datetime
 
-from app.models.user import User, AuditLogEntry  # Import AuditLogEntry
+from app.models.user import User, AuditLogEntry
 from app.schemas.user import UserUpdate, ProfileUpdate, UserCreate
 from app.auth.auth import AuthService
 
@@ -18,9 +18,7 @@ class UserService:
         user.id = str(user.id)
         return user
 
-    async def create_user(
-        self, user_create_data: UserCreate
-    ) -> Optional[User]:  # <--- Changed type hint to UserCreate
+    async def create_user(self, user_create_data: UserCreate) -> Optional[User]:
         """
         Creates a new user in the database.
         Hashes the password and converts UserCreate schema to Beanie User Document.
@@ -37,18 +35,18 @@ class UserService:
         # Hash the plaintext password from UserCreate
         hashed_password = self.auth_service.hash_password(user_create_data.password)
 
-        # Create a Beanie User Document instance from the UserCreate data
-        # Beanie models can often be created directly from Pydantic schema data
-        # by excluding the password and adding the hashed_password.
+        user_data_dict = user_create_data.model_dump(
+            exclude={"password"}, exclude_none=True
+        )
+
         new_user = User(
-            **user_create_data.model_dump(
-                exclude={"password"}
-            ),  # Unpack UserCreate data, excluding password
-            hashed_password=hashed_password,  # Add the hashed password
+            **user_data_dict,  # Pass the filtered dictionary
+            hashed_password=hashed_password,
         )
 
         try:
             await new_user.insert()  # Now call insert() on the Beanie User Document
+            new_user = self._handle_id(new_user)
             return new_user
         except Exception as e:
             # Log the error for debugging
@@ -70,8 +68,6 @@ class UserService:
     async def get_all_users(self, limit: int = 100, skip: int = 0) -> List[User]:
         """Retrieves all users with pagination."""
         all_users = await User.find_all(limit=limit, skip=skip).to_list()
-        # print("all users --")
-        # print(all_users)
 
         return [self._handle_id(user) for user in all_users]
 
@@ -137,7 +133,7 @@ class UserService:
             # $each allows adding multiple elements to the array
             await user.update({"$push": {"audit_log": {"$each": audit_entries}}})
 
-        return user
+        return self._handle_id(user)
 
     async def delete_user(self, user_id: PydanticObjectId) -> bool:
         """Deletes a user by their ID."""
