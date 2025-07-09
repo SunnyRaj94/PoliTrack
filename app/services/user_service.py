@@ -8,6 +8,10 @@ from app.schemas.user import UserUpdate, ProfileUpdate
 
 
 class UserService:
+    def _handle_id(self, user: User):
+        user.id = str(user.id)
+        return user
+
     async def create_user(self, user: User) -> Optional[User]:
         """Creates a new user in the database."""
         try:
@@ -28,7 +32,11 @@ class UserService:
 
     async def get_all_users(self, limit: int = 100, skip: int = 0) -> List[User]:
         """Retrieves all users with pagination."""
-        return await User.find_all(limit=limit, skip=skip).to_list()
+        all_users = await User.find_all(limit=limit, skip=skip).to_list()
+        # print("all users --")
+        # print(all_users)
+
+        return [self._handle_id(user) for user in all_users]
 
     async def update_user(
         self,

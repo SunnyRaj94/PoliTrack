@@ -26,7 +26,7 @@ document.getElementById('login-form').addEventListener('submit', async function(
         // Store the access token (e.g., in localStorage or sessionStorage)
         localStorage.setItem('access_token', data.access_token);
         // Redirect to the dashboard or a protected page
-        window.location.href = '/manage-users.html'; // Or your dashboard page
+        window.location.href = '/manage-users'; // Or your dashboard page
     } catch (error) {
         console.error('Error during login:', error);
         errorMessage.textContent = 'An unexpected error occurred. Please try again later.';

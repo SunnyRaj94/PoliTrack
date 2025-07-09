@@ -27,6 +27,13 @@ user_service = UserService()
 auth_service = AuthService()
 
 
+def handle_user_id(user_data):
+    if "_id" in user_data:
+        user_data["id"] = str(user_data["_id"])  # Assign to 'id' key for UserPublic
+        del user_data["_id"]
+    return user_data
+
+
 # Dependency to require Super Admin role
 def require_super_admin(current_user: User = Depends(get_current_user)):
     if current_user.role != UserRole.SUPER_ADMIN:
@@ -201,27 +208,7 @@ async def get_all_users(current_user: User = Depends(require_admin_or_super_admi
     Admins can only see 'user' and 'general_read_only' roles. Super Admins see all.
     """
     users = await user_service.get_all_users()
-
-    if current_user.role == UserRole.ADMIN:
-        # Admins only see 'user' and 'general_read_only' roles
-        users = [
-            user
-            for user in users
-            if user.role in [UserRole.USER, UserRole.GENERAL_READ_ONLY]
-        ]
-
-    # --- NEW CRITICAL CHANGE HERE ---
-    public_users = []
-    for user in users:
-        # Use user.model_dump(by_alias=True) to get the dictionary with 'id' instead of '_id'
-        # and then pass it to the constructor.
-        # Ensure that `id` in UserPublic is aliased to `_id` and is `str`.
-        # The json_encoders will handle PydanticObjectId to str for response serialization.
-        # For direct instantiation, PydanticObjectId needs to be cast to str.
-        user_data = user.model_dump(by_alias=True)
-        public_users.append(UserPublic(**user_data))
-
-    return public_users
+    return users
 
 
 @router.get("/{user_id}", response_model=UserPublic)
@@ -248,7 +235,7 @@ async def get_user_by_id(
             detail="Admins are not authorized to view this user's details.",
         )
 
-    return user
+    return handle_user_id(user)
 
 
 @router.put("/{user_id}", response_model=UserPublic)

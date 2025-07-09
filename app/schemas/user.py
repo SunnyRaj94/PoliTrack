@@ -58,9 +58,8 @@ class UserUpdate(BaseModel):
 
 
 class UserPublic(UserBase):
-    id: Optional[PydanticObjectId] = Field(
-        alias="_id", default_factory=PydanticObjectId
-    )
+    # id: str = Field(alias="_id", default_factory=PydanticObjectId)
+    id: str = Field(alias="_id")
     created_at: datetime
     updated_at: datetime
     audit_log: List[AuditLogEntry] = Field(default_factory=list)

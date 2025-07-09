@@ -99,3 +99,9 @@ app.include_router(
 async def read_index():
     index_html_path = os.path.join(TEMPLATES_DIR, "login.html")
     return FileResponse(index_html_path)
+
+
+@app.get("/manage-users")
+async def render_manage_users():
+    index_html_path = os.path.join(TEMPLATES_DIR, "manage-users.html")
+    return FileResponse(index_html_path)

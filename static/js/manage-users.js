@@ -26,7 +26,7 @@ function getAuthHeaders() {
     const token = localStorage.getItem('access_token');
     if (!token) {
         // If no token, redirect to login page (basic protection)
-        window.location.href = '/login.html'; 
+        window.location.href = '/'; 
         throw new Error('No access token found. Redirecting to login.');
     }
     return {
@@ -62,7 +62,7 @@ async function fetchUsers() {
             if (response.status === 401 || response.status === 403) {
                 alert('Unauthorized or Forbidden. Please log in again with sufficient permissions.');
                 localStorage.removeItem('access_token');
-                window.location.href = '/login.html';
+                window.location.href = '/';
                 return [];
             }
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -155,7 +155,7 @@ function renderUsers(users) {
 
     users.forEach(user => {
         const row = usersTableBody.insertRow();
-        row.insertCell().textContent = user.id.substring(0, 8) + '...'; // Truncate ID for display
+        row.insertCell().textContent = user.id
         row.insertCell().textContent = user.email;
         row.insertCell().textContent = `${user.first_name || ''} ${user.last_name || ''}`.trim();
         row.insertCell().textContent = user.role.replace('_', ' ').toUpperCase();
