@@ -7,8 +7,6 @@ from fastapi import HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 
 from app.configs import env, configs
-from app.models.user import User
-from app.services.user_service import UserService
 
 # Password hashing context
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -24,7 +22,7 @@ secret_key = env.get("SECRET_KEY")
 
 class AuthService:
     def __init__(self):
-        self.user_service = UserService()
+        pass
 
     def hash_password(self, password: str) -> str:
         return pwd_context.hash(password)
@@ -54,25 +52,3 @@ class AuthService:
                 detail="Could not validate credentials",
                 headers={"WWW-Authenticate": "Bearer"},
             )
-
-    async def get_current_user_from_token(self, token: str) -> User:
-        payload = self.decode_access_token(token)
-        user_email: str = payload.get("sub")
-        if user_email is None:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Could not validate credentials",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
-        user = await self.user_service.get_user_by_email(user_email)
-        if user is None:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Could not validate credentials",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
-        if not user.is_active:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST, detail="Inactive user"
-            )
-        return user

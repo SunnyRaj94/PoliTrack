@@ -12,8 +12,10 @@ body {
 
 /* Container for Centering */
 .container {
-    max-width: 400px;
+    max-width: 100%;
     width: 90%;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Auth Card (for Login/Register forms) */
@@ -106,7 +108,9 @@ button:hover {
     margin-top: 20px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     background-color: #fff;
-}
+    box-sizing: border-box;
+    padding: 8px;
+    }
 
 .data-table th, .data-table td {
     padding: 12px 15px;
@@ -157,11 +161,14 @@ button:hover {
 /* Manage Users Page Specific Layout */
 .manage-users-container {
     padding: 20px;
-    max-width: 1200px;
+    width: 100%;
+    max-width: 100%;
     margin: 20px auto;
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
 }
 
 .manage-users-container h2 {
@@ -174,6 +181,7 @@ button:hover {
     display: flex;
     justify-content: flex-end; /* Push button to the right */
     margin-bottom: 20px;
+    padding-right: 5%;
 }
 
 .manage-users-container .header-actions button {

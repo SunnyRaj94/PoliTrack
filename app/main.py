@@ -96,8 +96,14 @@ app.include_router(
 
 
 @app.get("/")
-async def read_index():
+async def read_login():
     index_html_path = os.path.join(TEMPLATES_DIR, "login.html")
+    return FileResponse(index_html_path)
+
+
+@app.get("/test")
+async def read_index():
+    index_html_path = os.path.join(TEMPLATES_DIR, "index.html")
     return FileResponse(index_html_path)
 
 

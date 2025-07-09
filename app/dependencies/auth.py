@@ -1,18 +1,11 @@
 # app/dependencies/auth.py
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-
-# from typing import Optional # Added to hint Optional for future use if needed
-
 from app.services.auth_service import AuthService
 from app.services.user_service import UserService
 from app.schemas.user import UserLogin  # Import UserLogin schema
 from app.models.user import User  # Import User model
 
-# from app.configs import (
-#     configs,
-#     env,
-# )  # Assuming you have a settings file for token generation
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="users/login")
 

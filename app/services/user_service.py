@@ -1,26 +1,63 @@
 # app/services/user_service.py
 from typing import List, Optional, Union
+from fastapi import HTTPException, status
 from beanie import PydanticObjectId
 from datetime import datetime
 
 from app.models.user import User, AuditLogEntry  # Import AuditLogEntry
-from app.schemas.user import UserUpdate, ProfileUpdate
+from app.schemas.user import UserUpdate, ProfileUpdate, UserCreate
+from app.auth.auth import AuthService
 
 
 class UserService:
+    def __init__(self):
+        # Initialize AuthService to hash passwords
+        self.auth_service = AuthService()
+
     def _handle_id(self, user: User):
         user.id = str(user.id)
         return user
 
-    async def create_user(self, user: User) -> Optional[User]:
-        """Creates a new user in the database."""
+    async def create_user(
+        self, user_create_data: UserCreate
+    ) -> Optional[User]:  # <--- Changed type hint to UserCreate
+        """
+        Creates a new user in the database.
+        Hashes the password and converts UserCreate schema to Beanie User Document.
+        """
+        # First, check if a user with this email already exists
+        existing_user = await self.get_user_by_email(user_create_data.email)
+        if existing_user:
+            # Raising HTTPException from service is fine if it's a domain-level error
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="User with this email already exists.",
+            )
+
+        # Hash the plaintext password from UserCreate
+        hashed_password = self.auth_service.hash_password(user_create_data.password)
+
+        # Create a Beanie User Document instance from the UserCreate data
+        # Beanie models can often be created directly from Pydantic schema data
+        # by excluding the password and adding the hashed_password.
+        new_user = User(
+            **user_create_data.model_dump(
+                exclude={"password"}
+            ),  # Unpack UserCreate data, excluding password
+            hashed_password=hashed_password,  # Add the hashed password
+        )
+
         try:
-            await user.insert()
-            return user
+            await new_user.insert()  # Now call insert() on the Beanie User Document
+            return new_user
         except Exception as e:
             # Log the error for debugging
             print(f"Error creating user: {e}")
-            return None
+            # Re-raise or return None, depending on whether you want the route to catch it
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Failed to create user: {e}",
+            )
 
     async def get_user_by_id(self, user_id: PydanticObjectId) -> Optional[User]:
         """Retrieves a user by their ID."""

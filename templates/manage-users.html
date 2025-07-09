@@ -4,27 +4,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Users - PoliTrack</title>
+    <title class="set-page-title">Default</title>
     <link rel="stylesheet" href="../static/css/login.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
-    <div class="container manage-users-container">
+    <div class="manage-users-container container text-center">
         <h2>Manage Users</h2>
 
-        <div class="header-actions">
+        <div class="header-actions row text-center">
             <button id="add-user-btn">Add New User</button>
         </div>
 
-        <table class="data-table" id="users-table">
+        <table class="data-table table-striped" id="users-table">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Email</th>
-                    <th>Name</th>
-                    <th>Role</th>
-                    <th>Status</th>
-                    <th>Actions</th>
+                    <th class="col">ID</th>
+                    <th class="col">Email</th>
+                    <th class="col">Name</th>
+                    <th class="col">Role</th>
+                    <th class="col">Status</th>
+                    <th class="col">Actions</th>
                 </tr>
             </thead>
             <tbody>

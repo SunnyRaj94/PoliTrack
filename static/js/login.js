@@ -1,3 +1,6 @@
+const setPageTitle = document.querySelector('title.set-page-title');
+setPageTitle.textContent = 'Politrack | Login';
+
 document.getElementById('login-form').addEventListener('submit', async function(event) {
     event.preventDefault(); // Prevent default form submission
 

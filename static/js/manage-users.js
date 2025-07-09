@@ -1,4 +1,6 @@
 const API_BASE_URL = 'http://localhost:8000'; // Your FastAPI backend URL
+const setPageTitle = document.querySelector('title.set-page-title');
+setPageTitle.textContent = 'Manage Users - PoliTrack';
 const usersTableBody = document.querySelector('#users-table tbody');
 const addUserBtn = document.getElementById('add-user-btn');
 const userModal = document.getElementById('user-modal');
@@ -148,32 +150,52 @@ async function deleteUser(userId) {
 
 function renderUsers(users) {
     usersTableBody.innerHTML = ''; // Clear existing rows
+    
     if (users.length === 0) {
-        usersTableBody.innerHTML = '<tr><td colspan="6">No users found.</td></tr>';
+        usersTableBody.innerHTML = '<tr><td colspan="6" class="text-center py-4">No users found.</td></tr>';
         return;
     }
 
     users.forEach(user => {
         const row = usersTableBody.insertRow();
-        row.insertCell().textContent = user.id
-        row.insertCell().textContent = user.email;
-        row.insertCell().textContent = `${user.first_name || ''} ${user.last_name || ''}`.trim();
-        row.insertCell().textContent = user.role.replace('_', ' ').toUpperCase();
-        row.insertCell().textContent = user.is_active ? 'Active' : 'Inactive';
-
+        
+        const idCell = row.insertCell();
+        idCell.textContent = user._id;
+        idCell.className = 'col';
+        
+        const emailCell = row.insertCell();
+        emailCell.textContent = user.email;
+        emailCell.className = 'col';
+        
+        const nameCell = row.insertCell();
+        nameCell.textContent = `${user.first_name || ''} ${user.last_name || ''}`.trim();
+        nameCell.className = 'col';
+        
+        const roleCell = row.insertCell();
+        roleCell.textContent = user.role.replace('_', ' ').toUpperCase();
+        roleCell.className = 'col';
+        
+        const statusCell = row.insertCell();
+        statusCell.textContent = user.is_active ? 'Active' : 'Inactive';
+        statusCell.className = 'col';
+        
+        // Actions cell
         const actionsCell = row.insertCell();
-        actionsCell.className = 'action-buttons';
-
+        actionsCell.className = 'action-buttons col';
+        
+        // Create action buttons
         const editBtn = document.createElement('button');
         editBtn.textContent = 'Edit';
-        editBtn.className = 'edit-btn';
+        editBtn.className = 'edit-btn mr-2';
+        editBtn.dataset.id = user._id;
         editBtn.addEventListener('click', () => openEditUserModal(user));
-
+        
         const deleteBtn = document.createElement('button');
         deleteBtn.textContent = 'Delete';
         deleteBtn.className = 'delete-btn';
-        deleteBtn.addEventListener('click', () => deleteUser(user.id));
-
+        deleteBtn.dataset.id = user._id;
+        deleteBtn.addEventListener('click', () => deleteUser(user._id)); // Changed from user.id to user._id
+        
         actionsCell.appendChild(editBtn);
         actionsCell.appendChild(deleteBtn);
     });
@@ -232,7 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchUsers();
     } else {
         // Redirect to login if not authenticated
-        window.location.href = '/login.html';
+        window.location.href = '/';
     }
 });
 
