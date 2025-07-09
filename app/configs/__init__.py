@@ -264,13 +264,9 @@ def handle_env_path(filedir, filename):
 
 
 ENV_KEYS = [
-    "APP_NAME",
-    "DEBUG",
     "SECRET_KEY",
-    "ALGORITHM",
     "MONGO_URI",
     "MONGO_DB",
-    "ACCESS_TOKEN_EXPIRE_MINUTES",
     "EMAIL_FROM",
     "WHATSAPP_API_KEY",
 ]
@@ -279,8 +275,9 @@ REPO_ROOT = get_ancestor_dir(__file__, 2)
 CONFIGS_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = Path(CONFIGS_DIR).parent.resolve()
 
+
 replacements = {"<ROOT_PATH>": str(PROJECT_ROOT)}
-__include__ = [(".env", REPO_ROOT), (CONFIGS_DIR, "config.yaml")]
+__include__ = [(".env", REPO_ROOT), ("configs.yaml", CONFIGS_DIR)]
 
 
 # Iterate through all files in the configs directory

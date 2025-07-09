@@ -45,7 +45,9 @@ dependencies = [
     'typing_extensions==4.14.0',
     'uvicorn==0.35.0',
     'wheel==0.45.1',
-    'beanie==1.30.0'
+    'beanie==1.30.0',
+    'fastapi_users==14.0.1',
+    'fastapi-users[beanie]'
     ]
 
 [tool.setuptools.packages.find]

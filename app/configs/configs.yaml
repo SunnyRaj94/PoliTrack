@@ -1,0 +1,6 @@
+app:
+  project_name: "PoliTrack"
+  debug_mode: true
+jwt:
+  access_token_expire_minutes: 60
+  algorithm: 'HS256'

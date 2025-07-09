@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users - PoliTrack</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container manage-users-container">
+        <h2>Manage Users</h2>
+
+        <div class="header-actions">
+            <button id="add-user-btn">Add New User</button>
+        </div>
+
+        <table class="data-table" id="users-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Email</th>
+                    <th>Name</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
+        <div id="user-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h3 id="modal-title">Add New User</h3>
+                <form id="user-form">
+                    <input type="hidden" id="user-id">
+                    <div class="form-group">
+                        <label for="modal-first-name">First Name:</label>
+                        <input type="text" id="modal-first-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-last-name">Last Name:</label>
+                        <input type="text" id="modal-last-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-email">Email:</label>
+                        <input type="email" id="modal-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-password">Password:</label>
+                        <input type="password" id="modal-password" placeholder="Leave blank to keep current password">
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-phone-number">Phone Number:</label>
+                        <input type="text" id="modal-phone-number">
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-profile-picture-url">Profile Picture URL:</label>
+                        <input type="text" id="modal-profile-picture-url">
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-role">Role:</label>
+                        <select id="modal-role" required>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-is-active">Active:</label>
+                        <input type="checkbox" id="modal-is-active">
+                    </div>
+                    <div id="modal-error-message" class="error-message"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="cancel-btn">Cancel</button>
+                        <button type="submit">Save User</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="manage-users.js"></script>
+</body>
+
+</html>

@@ -1,28 +1,36 @@
-from beanie import Document, Link
+# app/models/hierarchy.py
+from enum import Enum
+from typing import Optional, Dict, Any
 from pydantic import Field
-from typing import Optional
+from beanie import Document
 
 
-class HierarchyLevel(Document):
-    name: str = Field(..., description="e.g., 'Country', 'State', 'District'")
-    level_order: int = Field(
-        ...,
-        description="Numerical order of the level (e.g., 0 for Country, 1 for State)",
-    )
-    is_active: bool = True
+# --- Administrative Unit Types (Customizable) ---
+class AdministrativeUnitType(str, Enum):
+    """Defines the types of administrative units, matching the hierarchy levels."""
+
+    COUNTRY = "country"
+    STATE = "state"
+    DISTRICT = "district"
+    CITY = "city"
+    TALUKA = "taluka"
+    MOHALLA = "mohalla"
+
+
+# --- AdminUnit Model ---
+class AdminUnit(Document):
+    """
+    Represents an administrative unit in the hierarchical structure.
+    """
+
+    name: str = Field(unique=True, index=True)
+    type: AdministrativeUnitType
+    parent_id: Optional[str] = Field(
+        default=None, index=True
+    )  # ID of the parent AdminUnit
+
+    # Optional metadata, e.g., population, area, specific codes
+    metadata: Dict[str, Any] = Field(default_factory=dict)
 
     class Settings:
-        name = "hierarchy_levels"
-
-
-class AdministrativeUnit(Document):
-    name: str = Field(..., description="e.g., 'India', 'Jharkhand', 'Madhupur'")
-    level: Link[HierarchyLevel]  # Link to the HierarchyLevel document
-    parent_unit: Optional[Link["AdministrativeUnit"]] = (
-        None  # Self-referencing link for hierarchy
-    )
-    description: Optional[str] = None
-    is_active: bool = True
-
-    class Settings:
-        name = "administrative_units"
+        name = "admin_units"

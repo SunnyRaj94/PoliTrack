@@ -6,12 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }}</title>
     <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
-    <h1>Welcome to PoliTrack!</h1>
-    <p>Your centralized political management application.</p>
-    <p>This is the basic setup. More features coming soon!</p>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-md text-center">
+        <h1 class="text-3xl font-bold text-gray-800 mb-4">Welcome to PoliTrack!</h1>
+        <p class="text-lg text-gray-600 mb-6">Your centralized political management application.</p>
+        <p class="text-md text-gray-500">This is the basic setup. More features coming soon!</p>
+        <div class="mt-8">
+            <a href="/hello" class="text-blue-500 hover:underline">Test API Endpoint</a>
+        </div>
+    </div>
     <script src="/static/js/main.js"></script>
 </body>
 
