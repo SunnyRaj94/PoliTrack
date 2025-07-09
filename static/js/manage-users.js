@@ -3,6 +3,8 @@ const setPageTitle = document.querySelector('title.set-page-title');
 setPageTitle.textContent = 'Manage Users - PoliTrack';
 const usersTableBody = document.querySelector('#users-table tbody');
 const addUserBtn = document.getElementById('add-user-btn');
+const logoutBtn = document.getElementById('logout-btn');
+
 const userModal = document.getElementById('user-modal');
 const closeModalBtn = document.querySelector('.modal .close-button');
 const cancelModalBtn = document.querySelector('.modal-footer .cancel-btn');
@@ -63,8 +65,8 @@ async function fetchUsers() {
         if (!response.ok) {
             if (response.status === 401 || response.status === 403) {
                 alert('Unauthorized or Forbidden. Please log in again with sufficient permissions.');
-                localStorage.removeItem('access_token');
-                window.location.href = '/';
+                // Call logout function on unauthorized/forbidden
+                // logoutUser();
                 return [];
             }
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -245,6 +247,12 @@ function closeUserModal() {
     modalPassword.setAttribute('required', 'true'); // Reset password required state
 }
 
+// --- Logout Function ---
+function logoutUser() {
+    localStorage.removeItem('access_token'); // Remove the stored token
+    window.location.href = '/'; // Redirect to the login page
+}
+
 
 // --- Event Listeners ---
 
@@ -261,6 +269,8 @@ document.addEventListener('DOMContentLoaded', () => {
 addUserBtn.addEventListener('click', openAddUserModal);
 closeModalBtn.addEventListener('click', closeUserModal);
 cancelModalBtn.addEventListener('click', closeUserModal);
+logoutBtn.addEventListener('click', logoutUser);
+
 
 userForm.addEventListener('submit', async function(event) {
     event.preventDefault();
